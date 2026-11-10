@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naive Bayes Spam/Ham Classifier & Word Influence Explainer</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+</head>
+<body class="bg-transparent text-[var(--foreground)] antialiased p-3 md:p-5">
+  <div class="bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] rounded-2xl p-5 md:p-6 shadow-xl max-w-5xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-[var(--border)] gap-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 font-mono text-xs font-semibold uppercase">Explainable AI</span>
+          <span class="text-xs text-[var(--muted-foreground)] font-mono">Multinomial Naive Bayes</span>
+        </div>
+        <h1 class="text-xl md:text-2xl font-bold mt-1 text-[var(--foreground)]">
+          Email Spam Detector & Word Influence Explainer
+        </h1>
+        <p class="text-xs md:text-sm text-[var(--muted-foreground)] mt-0.5">
+          Exact Log-Likelihood Ratio (LLR) additive decomposition for each classification decision
+        </p>
+      </div>
+      <div class="flex items-center gap-4 bg-[var(--background)] px-3 py-2 rounded-xl border border-[var(--border)] text-xs">
+        <div>
+          <span class="text-[var(--muted-foreground)] block">Baseline Prior (b)</span>
+          <span class="font-mono font-bold text-indigo-400">__PRIOR_LOG_ODDS__</span>
+        </div>
+        <div class="w-px h-6 bg-[var(--border)]"></div>
+        <div>
+          <span class="text-[var(--muted-foreground)] block">Decision Boundary</span>
+          <span class="font-mono font-semibold text-[var(--foreground)]">&Delta; &gt; 0 &rArr; Spam</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Presets -->
+    <div>
+      <div class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-2 flex items-center justify-between">
+        <span>Select an Email Scenario Preset:</span>
+        <span class="text-[11px] font-normal">Or enter custom email below</span>
+      </div>
+      <div class="flex flex-wrap gap-2" id="presets-container"></div>
+    </div>
+
+    <!-- Input Box -->
+    <div class="space-y-3">
+      <div>
+        <label class="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Email Subject</label>
+        <input type="text" id="input-subject" class="w-full px-3 py-2 bg-[var(--background)] border border-[var(--border)] rounded-xl text-sm text-[var(--foreground)] focus:outline-none focus:ring-1 focus:ring-indigo-500 font-medium" placeholder="Email subject...">
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Email Body</label>
+        <textarea id="input-body" rows="5" class="w-full px-3 py-2 bg-[var(--background)] border border-[var(--border)] rounded-xl text-sm text-[var(--foreground)] focus:outline-none focus:ring-1 focus:ring-indigo-500 resize-y leading-relaxed" placeholder="Email message content..."></textarea>
+      </div>
+      <div class="flex justify-between items-center pt-1">
+        <span class="text-xs text-[var(--muted-foreground)]" id="token-count-label">0 tokens extracted</span>
+        <button onclick="runAnalysis()" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow transition flex items-center gap-2">
+          <span>Classify & Report Influential Words</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Panel -->
+    <div id="results-section" class="border border-[var(--border)] rounded-xl p-5 bg-[var(--background)] space-y-5">
+      <!-- Decision Summary Cards -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
+        <div class="flex items-center gap-3">
+          <span id="badge-pred" class="px-4 py-1.5 rounded-full text-sm font-extrabold tracking-wide uppercase">--</span>
+          <div>
+            <div id="badge-conf" class="text-base font-bold text-[var(--foreground)]">Confidence: --%</div>
+            <div class="text-xs text-[var(--muted-foreground)]">Spam: <span id="val-spam-prob" class="font-semibold text-red-400">--%</span> | Ham: <span id="val-ham-prob" class="font-semibold text-emerald-400">--%</span></div>
+          </div>
+        </div>
+
+        <div class="flex gap-2 text-center text-xs font-mono">
+          <div class="px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)]">
+            <div class="text-[10px] text-[var(--muted-foreground)] font-sans uppercase">Prior (b)</div>
+            <div id="val-prior" class="font-bold">__PRIOR_LOG_ODDS__</div>
+          </div>
+          <div class="px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)]">
+            <div class="text-[10px] text-[var(--muted-foreground)] font-sans uppercase">Word Evidence (&sum; &phi;)</div>
+            <div id="val-words" class="font-bold">--</div>
+          </div>
+          <div class="px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)]">
+            <div class="text-[10px] text-[var(--muted-foreground)] font-sans uppercase">Total Log-Odds (&Delta;)</div>
+            <div id="val-delta" class="font-bold">--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Probability Bar -->
+      <div>
+        <div class="flex justify-between text-xs text-[var(--muted-foreground)] mb-1 font-mono">
+          <span>Ham Evidence</span>
+          <span>Spam Evidence</span>
+        </div>
+        <div class="w-full h-2.5 bg-[var(--border)] rounded-full overflow-hidden flex">
+          <div id="bar-ham" class="bg-emerald-500 h-full transition-all duration-300" style="width: 50%"></div>
+          <div id="bar-spam" class="bg-red-500 h-full transition-all duration-300" style="width: 50%"></div>
+        </div>
+      </div>
+
+      <!-- Token Heatmap -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+            Word Influence Heatmap in Context
+          </h3>
+          <div class="flex items-center gap-3 text-[11px] text-[var(--muted-foreground)]">
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-red-500/40 border border-red-500"></span> Spam Driver</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-emerald-500/40 border border-emerald-500"></span> Ham Driver</span>
+            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-slate-500/30"></span> Neutral/OOV</span>
+          </div>
+        </div>
+        <div id="heatmap-box" class="p-4 rounded-xl border border-[var(--border)] bg-[var(--card)] text-xs md:text-sm font-mono leading-relaxed max-h-48 overflow-y-auto select-text whitespace-pre-wrap">
+        </div>
+      </div>
+
+      <!-- Top Influential Words Table -->
+      <div>
+        <h3 id="table-title" class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-2">
+          Top Words Driving This Decision
+        </h3>
+        <div class="overflow-x-auto border border-[var(--border)] rounded-xl bg-[var(--card)]">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)] font-mono uppercase">
+                <th class="py-2 px-3">Rank</th>
+                <th class="py-2 px-3">Word</th>
+                <th class="py-2 px-3 text-center">Count</th>
+                <th class="py-2 px-3 text-right">LLR (Word Weight)</th>
+                <th class="py-2 px-3 text-right">Net Contribution</th>
+                <th class="py-2 px-3">Share of Evidence</th>
+              </tr>
+            </thead>
+            <tbody id="table-body-influential" class="divide-y divide-[var(--border)] font-mono">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Opposing Evidence Table -->
+      <div id="counter-evidence-container">
+        <h3 id="counter-title" class="text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-2">
+          Opposing Evidence (Mitigating Words)
+        </h3>
+        <div class="overflow-x-auto border border-[var(--border)] rounded-xl bg-[var(--card)]">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-[var(--border)] text-[var(--muted-foreground)] font-mono uppercase">
+                <th class="py-2 px-3">Rank</th>
+                <th class="py-2 px-3">Word</th>
+                <th class="py-2 px-3 text-center">Count</th>
+                <th class="py-2 px-3 text-right">LLR (Word Weight)</th>
+                <th class="py-2 px-3 text-right">Opposing Impact</th>
+                <th class="py-2 px-3">Opposing Share</th>
+              </tr>
+            </thead>
+            <tbody id="table-body-counter" class="divide-y divide-[var(--border)] font-mono">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const LLR_VOCAB = __LLR_JSON__;
+    const PRIOR_LOG_ODDS = __PRIOR_LOG_ODDS__;
+    const PRESETS = __PRESETS_JSON__;
+
+    function initPresets() {
+      const c = document.getElementById('presets-container');
+      PRESETS.forEach((p, i) => {
+        const btn = document.createElement('button');
+        const isSpam = p.label === 'spam';
+        btn.className = `px-2.5 py-1.5 rounded-lg text-xs font-medium border transition ${
+          isSpam ? 'border-red-500/30 text-red-400 hover:bg-red-500/10' : 'border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10'
+        } flex items-center gap-1.5`;
+        btn.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${isSpam ? 'bg-red-400' : 'bg-emerald-400'}"></span>${p.subject.substring(0, 26)}...`;
+        btn.onclick = () => {
+          document.getElementById('input-subject').value = p.subject;
+          document.getElementById('input-body').value = p.body;
+          runAnalysis();
+        };
+        c.appendChild(btn);
+      });
+    }
+
+    function tokenize(text) {
+      const cleaned = text.toLowerCase()
+        .replace(/https?:\/\/\S+|www\.\S+/g, ' __url__ ')
+        .replace(/[\$£€¥](\d+(?:,\d+)*(?:\.\d+)?)/g, ' __currency__ $1 ')
+        .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g, ' __email__ ');
+      const tokens = cleaned.match(/\b[a-zA-Z_][a-zA-Z0-9_]*\b/g) || [];
+      return tokens.filter(t => t.length >= 2);
+    }
+
+    function runAnalysis() {
+      const subj = document.getElementById('input-subject').value.trim();
+      const body = document.getElementById('input-body').value.trim();
+      const rawText = subj ? `Subject: ${subj}\n\n${body}` : body;
+
+      if (!rawText) return;
+
+      const tokens = tokenize(rawText);
+      document.getElementById('token-count-label').innerText = `${tokens.length} tokens extracted`;
+
+      const counts = {};
+      tokens.forEach(t => counts[t] = (counts[t] || 0) + 1);
+
+      let netWordEvidence = 0.0;
+      const wordBreakdown = [];
+      const oov = [];
+
+      for (const [w, count] of Object.entries(counts)) {
+        if (LLR_VOCAB[w] !== undefined) {
+          const llr = LLR_VOCAB[w];
+          const contrib = count * llr;
+          netWordEvidence += contrib;
+          wordBreakdown.push({
+            word: w,
+            count: count,
+            llr: llr,
+            contrib: contrib,
+            absContrib: Math.abs(contrib)
+          });
+        } else {
+          oov.push(w);
+        }
+      }
+
+      const totalDelta = PRIOR_LOG_ODDS + netWordEvidence;
+      const pSpam = 1.0 / (1.0 + Math.exp(-Math.max(-700, Math.min(700, totalDelta))));
+      const pHam = 1.0 - pSpam;
+      const isSpam = pSpam >= 0.5;
+      const conf = isSpam ? pSpam : pHam;
+
+      // Update badges
+      const badgePred = document.getElementById('badge-pred');
+      badgePred.innerText = isSpam ? 'SPAM' : 'HAM';
+      badgePred.className = `px-4 py-1.5 rounded-full text-sm font-extrabold tracking-wide uppercase border ${
+        isSpam ? 'bg-red-500/20 text-red-400 border-red-500/40' : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
+      }`;
+
+      document.getElementById('badge-conf').innerText = `Confidence: ${(conf * 100).toFixed(1)}%`;
+      document.getElementById('val-spam-prob').innerText = `${(pSpam * 100).toFixed(1)}%`;
+      document.getElementById('val-ham-prob').innerText = `${(pHam * 100).toFixed(1)}%`;
+
+      document.getElementById('val-words').innerText = `${netWordEvidence > 0 ? '+' : ''}${netWordEvidence.toFixed(3)}`;
+      document.getElementById('val-words').className = `font-bold ${netWordEvidence > 0 ? 'text-red-400' : 'text-emerald-400'}`;
+
+      document.getElementById('val-delta').innerText = `${totalDelta > 0 ? '+' : ''}${totalDelta.toFixed(3)}`;
+      document.getElementById('val-delta').className = `font-bold ${totalDelta > 0 ? 'text-red-400' : 'text-emerald-400'}`;
+
+      // Bar width
+      const spamWidth = Math.min(Math.max(pSpam * 100, 2), 98);
+      document.getElementById('bar-spam').style.width = `${spamWidth}%`;
+      document.getElementById('bar-ham').style.width = `${100 - spamWidth}%`;
+
+      // Split supporting vs opposing
+      let supporting = [];
+      let opposing = [];
+
+      if (isSpam) {
+        supporting = wordBreakdown.filter(item => item.contrib > 0).sort((a,b) => b.contrib - a.contrib);
+        opposing = wordBreakdown.filter(item => item.contrib < 0).sort((a,b) => a.contrib - b.contrib);
+      } else {
+        supporting = wordBreakdown.filter(item => item.contrib < 0).sort((a,b) => a.contrib - b.contrib);
+        opposing = wordBreakdown.filter(item => item.contrib > 0).sort((a,b) => b.contrib - a.contrib);
+      }
+
+      const totalSupportMag = supporting.reduce((acc, x) => acc + Math.abs(x.contrib), 0);
+      supporting.forEach(x => x.share = totalSupportMag > 0 ? (Math.abs(x.contrib) / totalSupportMag * 100) : 0);
+
+      const totalOpposeMag = opposing.reduce((acc, x) => acc + Math.abs(x.contrib), 0);
+      opposing.forEach(x => x.share = totalOpposeMag > 0 ? (Math.abs(x.contrib) / totalOpposeMag * 100) : 0);
+
+      // Render Table Influential
+      document.getElementById('table-title').innerText = `Top Words Driving Decision Towards [${isSpam ? 'SPAM' : 'HAM'}]`;
+      const tbodyInf = document.getElementById('table-body-influential');
+      tbodyInf.innerHTML = '';
+
+      supporting.slice(0, 10).forEach((item, idx) => {
+        const impact = isSpam ? item.contrib : -item.contrib;
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-[var(--border)]/20 transition-colors';
+        tr.innerHTML = `
+          <td class="py-2 px-3 text-[var(--muted-foreground)]">#${idx + 1}</td>
+          <td class="py-2 px-3 font-semibold text-[var(--foreground)] font-sans">${item.word}</td>
+          <td class="py-2 px-3 text-center">${item.count}</td>
+          <td class="py-2 px-3 text-right font-mono text-[var(--muted-foreground)]">${item.llr > 0 ? '+' : ''}${item.llr.toFixed(3)}</td>
+          <td class="py-2 px-3 text-right font-mono font-bold ${isSpam ? 'text-red-400' : 'text-emerald-400'}">${impact > 0 ? '+' : ''}${impact.toFixed(3)}</td>
+          <td class="py-2 px-3">
+            <div class="flex items-center gap-2">
+              <div class="w-16 bg-[var(--border)] h-1.5 rounded-full overflow-hidden">
+                <div class="${isSpam ? 'bg-red-500' : 'bg-emerald-500'} h-full" style="width: ${Math.min(item.share, 100)}%"></div>
+              </div>
+              <span class="text-[11px] text-[var(--muted-foreground)]">${item.share.toFixed(1)}%</span>
+            </div>
+          </td>
+        `;
+        tbodyInf.appendChild(tr);
+      });
+
+      // Render Counter Table
+      document.getElementById('counter-title').innerText = `Opposing Evidence (Words Pulling Towards [${isSpam ? 'HAM' : 'SPAM'}])`;
+      const tbodyCounter = document.getElementById('table-body-counter');
+      tbodyCounter.innerHTML = '';
+
+      if (opposing.length === 0) {
+        tbodyCounter.innerHTML = `<tr><td colspan="6" class="py-2 px-3 text-[var(--muted-foreground)] italic font-sans">None -- all tokens favored the predicted class or were neutral.</td></tr>`;
+      } else {
+        opposing.slice(0, 8).forEach((item, idx) => {
+          const oppImpact = isSpam ? -item.contrib : item.contrib;
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-[var(--border)]/20 transition-colors';
+          tr.innerHTML = `
+            <td class="py-2 px-3 text-[var(--muted-foreground)]">#${idx + 1}</td>
+            <td class="py-2 px-3 font-semibold text-[var(--foreground)] font-sans">${item.word}</td>
+            <td class="py-2 px-3 text-center">${item.count}</td>
+            <td class="py-2 px-3 text-right font-mono text-[var(--muted-foreground)]">${item.llr > 0 ? '+' : ''}${item.llr.toFixed(3)}</td>
+            <td class="py-2 px-3 text-right font-mono font-bold ${isSpam ? 'text-emerald-400' : 'text-red-400'}">${oppImpact > 0 ? '+' : ''}${oppImpact.toFixed(3)}</td>
+            <td class="py-2 px-3 text-[11px] text-[var(--muted-foreground)]">${item.share.toFixed(1)}%</td>
+          `;
+          tbodyCounter.appendChild(tr);
+        });
+      }
+
+      // Render Heatmap
+      const wordMap = {};
+      wordBreakdown.forEach(w => wordMap[w.word] = w);
+
+      const parts = rawText.split(/(\b[a-zA-Z_][a-zA-Z0-9_]*\b)/);
+      const heatmapBox = document.getElementById('heatmap-box');
+      heatmapBox.innerHTML = '';
+
+      parts.forEach(seg => {
+        const lower = seg.toLowerCase();
+        if (wordMap[lower]) {
+          const w = wordMap[lower];
+          const span = document.createElement('span');
+          if (w.contrib > 0.05) {
+            span.className = 'bg-red-500/20 text-red-300 border-b border-red-500 px-1 py-0.5 rounded cursor-help font-medium';
+            span.title = `Word: '${seg}' | LLR: +${w.llr.toFixed(3)} (Spam) | Total: +${w.contrib.toFixed(3)}`;
+          } else if (w.contrib < -0.05) {
+            span.className = 'bg-emerald-500/20 text-emerald-300 border-b border-emerald-500 px-1 py-0.5 rounded cursor-help font-medium';
+            span.title = `Word: '${seg}' | LLR: ${w.llr.toFixed(3)} (Ham) | Total: ${w.contrib.toFixed(3)}`;
+          } else {
+            span.className = 'text-[var(--muted-foreground)]';
+            span.title = `Word: '${seg}' | Neutral`;
+          }
+          span.textContent = seg;
+          heatmapBox.appendChild(span);
+        } else {
+          heatmapBox.appendChild(document.createTextNode(seg));
+        }
+      });
+    }
+
+    window.onload = () => {
+      initPresets();
+      if (PRESETS.length > 0) {
+        document.getElementById('input-subject').value = PRESETS[0].subject;
+        document.getElementById('input-body').value = PRESETS[0].body;
+        runAnalysis();
+      }
+    };
+  </script>
+</body>
+</html>

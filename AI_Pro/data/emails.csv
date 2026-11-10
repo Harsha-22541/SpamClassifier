@@ -1,0 +1,97 @@
+id,label,subject,body,full_text
+spam_urgent_account,spam,URGENT: Your Account Has Been Suspended - Verify Immediately,"Dear Customer, We detected unauthorized login attempts from an unknown device. Your access has been restricted. Click the secure link below to verify your password and identity within 24 hours to prevent permanent account suspension. http://secure-banking-alert-update.com/login","Subject: URGENT: Your Account Has Been Suspended - Verify Immediately
+
+Dear Customer, We detected unauthorized login attempts from an unknown device. Your access has been restricted. Click the secure link below to verify your password and identity within 24 hours to prevent permanent account suspension. http://secure-banking-alert-update.com/login"
+spam_lottery_prize,spam,"CONGRATULATIONS: You won $2,500,000 cash in the International Sweepstakes!","Official notification from the Global Lottery Bureau. Your email address was selected as the first prize winner of $2,500,000 cash! To claim your jackpot prize, reply urgently with your full name, phone number, and mailing address. No purchase required. Claim today!","Subject: CONGRATULATIONS: You won $2,500,000 cash in the International Sweepstakes!
+
+Official notification from the Global Lottery Bureau. Your email address was selected as the first prize winner of $2,500,000 cash! To claim your jackpot prize, reply urgently with your full name, phone number, and mailing address. No purchase required. Claim today!"
+spam_crypto_investment,spam,Guaranteed 500% profit with automated Bitcoin AI trading bot,"Double your crypto in 7 days! Our proprietary AI trading algorithm guarantees risk-free returns. Minimum deposit only $250. Thousands of investors are earning $5,000 weekly passive income. Sign up right now to get a $100 free bonus deposit!","Subject: Guaranteed 500% profit with automated Bitcoin AI trading bot
+
+Double your crypto in 7 days! Our proprietary AI trading algorithm guarantees risk-free returns. Minimum deposit only $250. Thousands of investors are earning $5,000 weekly passive income. Sign up right now to get a $100 free bonus deposit!"
+spam_pharmacy_discount,spam,Exclusive 80% discount on generic medications - No prescription needed,"Order authentic meds online at unbeatable discount prices. Fast discreet express shipping right to your door. Buy Viagra, Cialis, antibiotics and pain relief without prescription. Click here to claim your limited-time 80% coupon!","Subject: Exclusive 80% discount on generic medications - No prescription needed
+
+Order authentic meds online at unbeatable discount prices. Fast discreet express shipping right to your door. Buy Viagra, Cialis, antibiotics and pain relief without prescription. Click here to claim your limited-time 80% coupon!"
+spam_wire_invoice,spam,OVERDUE INVOICE #89211 - Final Notice Before Legal Action,"Please find attached the past due invoice #89211 for services rendered last month. Amount due: $8,420.00. Payment must be wired immediately to the escrow account provided below to avoid immediate referral to collection agencies and legal action.","Subject: OVERDUE INVOICE #89211 - Final Notice Before Legal Action
+
+Please find attached the past due invoice #89211 for services rendered last month. Amount due: $8,420.00. Payment must be wired immediately to the escrow account provided below to avoid immediate referral to collection agencies and legal action."
+ham_sprint_meeting,ham,Sprint planning agenda and Q4 deliverables review,"Hi team, Just a reminder that our sprint planning session is scheduled for tomorrow at 10:00 AM in Conference Room B. Please review the updated backlog and Jira tickets beforehand. We need to finalize the engineering roadmap and API endpoint specifications for Q4. Thanks, Alex","Subject: Sprint planning agenda and Q4 deliverables review
+
+Hi team, Just a reminder that our sprint planning session is scheduled for tomorrow at 10:00 AM in Conference Room B. Please review the updated backlog and Jira tickets beforehand. We need to finalize the engineering roadmap and API endpoint specifications for Q4. Thanks, Alex"
+ham_code_review,ham,Pull Request #412: Implement user authentication middleware and unit tests,"Hi Sarah, I've pushed the code review changes for PR #412 addressing the session token expiration. All unit tests and integration tests are passing in CI. Could you take another look at the middleware handler when you have a moment? The diff is ready for review.","Subject: Pull Request #412: Implement user authentication middleware and unit tests
+
+Hi Sarah, I've pushed the code review changes for PR #412 addressing the session token expiration. All unit tests and integration tests are passing in CI. Could you take another look at the middleware handler when you have a moment? The diff is ready for review."
+ham_lunch_coworker,ham,Lunch today around 12:30?,"Hey, a few of us are walking over to the taco truck down the street around 12:30 PM. Let me know if you want to join or if you need me to grab something for you!","Subject: Lunch today around 12:30?
+
+Hey, a few of us are walking over to the taco truck down the street around 12:30 PM. Let me know if you want to join or if you need me to grab something for you!"
+ham_client_contract,ham,Signed consulting agreement and project kickoff timeline,"Dear David, Thank you for sending over the revised consulting agreement. We have signed the document and attached the executed PDF. We are excited to begin work on the data pipeline next Monday. Let's schedule our introductory kickoff call for Tuesday afternoon.","Subject: Signed consulting agreement and project kickoff timeline
+
+Dear David, Thank you for sending over the revised consulting agreement. We have signed the document and attached the executed PDF. We are excited to begin work on the data pipeline next Monday. Let's schedule our introductory kickoff call for Tuesday afternoon."
+ham_doctor_appointment,ham,Confirmation: Medical appointment with Dr. Martinez on Nov 18,"This is a confirmation that your annual wellness visit with Dr. Martinez is scheduled for Wednesday, November 18 at 2:15 PM at Valley Health Clinic. Please arrive 15 minutes early and bring your photo ID and insurance card. If you need to reschedule, call our office at 555-0192.","Subject: Confirmation: Medical appointment with Dr. Martinez on Nov 18
+
+This is a confirmation that your annual wellness visit with Dr. Martinez is scheduled for Wednesday, November 18 at 2:15 PM at Valley Health Clinic. Please arrive 15 minutes early and bring your photo ID and insurance card. If you need to reschedule, call our office at 555-0192."
+borderline_free_conference,ham,Claim your complimentary ticket to the Annual Developer Tech Summit,"Join thousands of software engineers and machine learning researchers at the Global Tech Summit next month. Attendance is free for early registrations. Keynote talks on artificial intelligence, distributed systems, and open source development. Reserve your free seat now before spots fill up!","Subject: Claim your complimentary ticket to the Annual Developer Tech Summit
+
+Join thousands of software engineers and machine learning researchers at the Global Tech Summit next month. Attendance is free for early registrations. Keynote talks on artificial intelligence, distributed systems, and open source development. Reserve your free seat now before spots fill up!"
+borderline_urgent_deadline,ham,Urgent: Project deadline moved up to Friday 5 PM,"Team, executive leadership requested that we submit the final project presentation and financial forecast by Friday 5 PM instead of next week. Please review your assigned slides and send me your sections before Thursday noon so we can consolidate. Thank you for your hard work.","Subject: Urgent: Project deadline moved up to Friday 5 PM
+
+Team, executive leadership requested that we submit the final project presentation and financial forecast by Friday 5 PM instead of next week. Please review your assigned slides and send me your sections before Thursday noon so we can consolidate. Thank you for your hard work."
+email_12,ham,Quarterly Budget Forecast Meeting,"Hi Brenda, Please see the attached spreadsheet with the Q3 expenditure figures. Let's discuss discrepancies in the marketing budget during our 1-on-1.","Subject: Quarterly Budget Forecast Meeting
+
+Hi Brenda, Please see the attached spreadsheet with the Q3 expenditure figures. Let's discuss discrepancies in the marketing budget during our 1-on-1."
+email_13,ham,Flight Confirmation - Booking Reference #XK891,"Your flight from Boston to Chicago is confirmed for departure on December 4th. Terminal 2, Gate B14. Check in online 24 hours prior to flight.","Subject: Flight Confirmation - Booking Reference #XK891
+
+Your flight from Boston to Chicago is confirmed for departure on December 4th. Terminal 2, Gate B14. Check in online 24 hours prior to flight."
+email_14,ham,Feedback on draft proposal,"Mark, I reviewed the draft you sent over. Overall looks very solid. I left a few minor comments on pages 3 and 7 regarding server sizing.","Subject: Feedback on draft proposal
+
+Mark, I reviewed the draft you sent over. Overall looks very solid. I left a few minor comments on pages 3 and 7 regarding server sizing."
+email_15,ham,Gym membership renewal receipt,Thank you for your recent payment of $45.00 for your monthly gym membership. Your receipt is attached for your records.,"Subject: Gym membership renewal receipt
+
+Thank you for your recent payment of $45.00 for your monthly gym membership. Your receipt is attached for your records."
+email_16,ham,Dinner plans this weekend?,"Hey mom, just checking in to see if you and dad want to get dinner together on Saturday. Let me know what time works best.","Subject: Dinner plans this weekend?
+
+Hey mom, just checking in to see if you and dad want to get dinner together on Saturday. Let me know what time works best."
+email_17,ham,University Research Symposium Submission Accepted,"Dear Author, We are pleased to inform you that your paper 'Bayesian Methods in Information Retrieval' has been accepted for oral presentation at the upcoming symposium.","Subject: University Research Symposium Submission Accepted
+
+Dear Author, We are pleased to inform you that your paper 'Bayesian Methods in Information Retrieval' has been accepted for oral presentation at the upcoming symposium."
+email_18,ham,Security alert: New login from your Chrome browser on Windows,"We noticed a new sign-in to your work account on Windows. If this was you, no action is needed. If not, contact your IT department.","Subject: Security alert: New login from your Chrome browser on Windows
+
+We noticed a new sign-in to your work account on Windows. If this was you, no action is needed. If not, contact your IT department."
+email_19,ham,Invoice for web design services - Project Milestone 2,Attached please find invoice INV-2026-088 for the frontend UI development completed last week. Net 30 payment terms apply.,"Subject: Invoice for web design services - Project Milestone 2
+
+Attached please find invoice INV-2026-088 for the frontend UI development completed last week. Net 30 payment terms apply."
+email_20,ham,Updated office holiday schedule,All employees: Please note that the main office will be closed on Thanksgiving Thursday and Friday. Normal business operations resume Monday.,"Subject: Updated office holiday schedule
+
+All employees: Please note that the main office will be closed on Thanksgiving Thursday and Friday. Normal business operations resume Monday."
+email_21,ham,Code repository migrated to new organization,"Team, the Git repository migration is complete. Please update your git remote URL to point to the new org repo before pushing any new branches.","Subject: Code repository migrated to new organization
+
+Team, the Git repository migration is complete. Please update your git remote URL to point to the new org repo before pushing any new branches."
+email_22,spam,ACT NOW: Claim your $500 Amazon Gift Card reward,Congratulations! You have been randomly selected from our customer database to receive an exclusive $500 Amazon gift certificate. Click here to confirm your claim before midnight!,"Subject: ACT NOW: Claim your $500 Amazon Gift Card reward
+
+Congratulations! You have been randomly selected from our customer database to receive an exclusive $500 Amazon gift certificate. Click here to confirm your claim before midnight!"
+email_23,spam,URGENT SECURITY NOTICE: Compromised Bank Account,Your online banking profile was flagged for suspicious activity. Immediate identity re-verification is required. Follow this link to avoid total account lockdown.,"Subject: URGENT SECURITY NOTICE: Compromised Bank Account
+
+Your online banking profile was flagged for suspicious activity. Immediate identity re-verification is required. Follow this link to avoid total account lockdown."
+email_24,spam,"Pre-approved for $50,000 personal loan with 0% interest","Bad credit? No problem! You are pre-approved for an instant cash loan up to $50,000. No collateral, no background check. Instant wire transfer to your bank. Apply today!","Subject: Pre-approved for $50,000 personal loan with 0% interest
+
+Bad credit? No problem! You are pre-approved for an instant cash loan up to $50,000. No collateral, no background check. Instant wire transfer to your bank. Apply today!"
+email_25,spam,Burn belly fat fast with this miracle secret extract,Doctors are stunned by this brand new organic dietary formula. Lose 15 lbs in 10 days without exercise or dieting. Buy 2 bottles and get 3 free! Order today while supplies last.,"Subject: Burn belly fat fast with this miracle secret extract
+
+Doctors are stunned by this brand new organic dietary formula. Lose 15 lbs in 10 days without exercise or dieting. Buy 2 bottles and get 3 free! Order today while supplies last."
+email_26,spam,"Dearest in Christ, Transfer of $18.5 Million Funds","I am Mrs. Fatima Al-Mansoor, widow to the late diplomat. I have deposited $18.5M in a security company abroad. I need an honest person to transfer these funds for charitable causes. 30% share is yours.","Subject: Dearest in Christ, Transfer of $18.5 Million Funds
+
+I am Mrs. Fatima Al-Mansoor, widow to the late diplomat. I have deposited $18.5M in a security company abroad. I need an honest person to transfer these funds for charitable causes. 30% share is yours."
+email_27,spam,Cheap designer replica watches and luxury handbags,"Rolex, Gucci, Prada at 90% discount! 100% waterproof Swiss movement replicas. Worldwide free delivery. Shop the exclusive clearance warehouse catalog now!","Subject: Cheap designer replica watches and luxury handbags
+
+Rolex, Gucci, Prada at 90% discount! 100% waterproof Swiss movement replicas. Worldwide free delivery. Shop the exclusive clearance warehouse catalog now!"
+email_28,spam,Work from home making $800 daily stuffing envelopes,Earn huge income working only 2 hours a day from the comfort of your couch. No skills required. Immediate payout every Friday. Register your email now to get the startup kit!,"Subject: Work from home making $800 daily stuffing envelopes
+
+Earn huge income working only 2 hours a day from the comfort of your couch. No skills required. Immediate payout every Friday. Register your email now to get the startup kit!"
+email_29,spam,WINNER NOTIFICATION: Apple iPhone 16 Pro Giveaway,"You are the runner-up winner of the annual smartphone prize drawing! To claim your brand new iPhone, pay only $1 for shipping and confirm your delivery postal address.","Subject: WINNER NOTIFICATION: Apple iPhone 16 Pro Giveaway
+
+You are the runner-up winner of the annual smartphone prize drawing! To claim your brand new iPhone, pay only $1 for shipping and confirm your delivery postal address."
+email_30,spam,Refinance your mortgage at historic lowest rate ever,Homeowners alert! Government backed mortgage relief program allows you to drop your monthly payments by half. Check eligibility in 60 seconds with no cost or obligation.,"Subject: Refinance your mortgage at historic lowest rate ever
+
+Homeowners alert! Government backed mortgage relief program allows you to drop your monthly payments by half. Check eligibility in 60 seconds with no cost or obligation."
+email_31,spam,Stop hair loss permanently with clinically proven serum,"Regrow thick, healthy hair in just 3 weeks! 100% money back guarantee. Limited stock available. Click here to claim your trial bottle!","Subject: Stop hair loss permanently with clinically proven serum
+
+Regrow thick, healthy hair in just 3 weeks! 100% money back guarantee. Limited stock available. Click here to claim your trial bottle!"
